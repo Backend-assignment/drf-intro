@@ -9,13 +9,24 @@ class TodoView(APIView):
     def get(self, request: Request) -> Response:
         todos = Todo.objects.all()
         print(type(todos[0]))
+      
+        
+        serilazer = TodoSerializer(todos, many=True)
         data = {
-            "results": []
+            "results": serilazer.data
         }
-        
-        
-        for todo in todos:
-            serializer = TodoSerializer(todo)
-            data["results"].append(serializer.data)
+      
+
 
         return Response(data, status=status.HTTP_200_OK)
+    
+    def post(self, request: Request) -> Response:
+        data = request.data
+        todo = Todo(
+            task=data["task"],
+            description=data["description"],
+            completed=data["completed"]
+        )
+        todo.save()
+        return Response(status=status.HTTP_200_OK)
+        
