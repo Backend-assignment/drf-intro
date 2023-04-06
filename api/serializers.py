@@ -7,3 +7,12 @@ class TodoSerializer(serializers.Serializer):
     completed = serializers.BooleanField()
     # created_at = serializers.DateTimeField()
     # updated_at = serializers.DateTimeField()
+
+    def create(self, validated_data):
+        todo = Todo.objects.create(
+            task=validated_data['task'],
+            description=validated_data['description'],
+            completed=validated_data['completed'],
+        )
+        return todo
+        

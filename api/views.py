@@ -21,12 +21,10 @@ class TodoView(APIView):
         return Response(data, status=status.HTTP_200_OK)
     
     def post(self, request: Request) -> Response:
-        data = request.data
-        todo = Todo(
-            task=data["task"],
-            description=data["description"],
-            completed=data["completed"]
-        )
-        todo.save()
-        return Response(status=status.HTTP_200_OK)
+        serializer = TodoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+           
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
