@@ -1,16 +1,8 @@
 from django.urls import path
 from .views import (
-    hi,
-    addition,
-    subtraction,
-    multiplication,
-    division,
+TodoView,
 )
 
 urlpatterns = [
-    path('hi', hi),
-    path('addition', addition),
-    path('subtraction', subtraction),
-    path('multiplication', multiplication),
-    path('division', division),
+    path('todos/', TodoView.as_view()),
 ]

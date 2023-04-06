@@ -1,90 +1,23 @@
-from rest_framework.decorators import api_view
+
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from .models import Todo
 
+class TodoView(APIView):
+    def get(self, request: Request) -> Response:
+        todos = Todo.objects.all()
+        data = {
+            "results": []
+        }
+        for todo in todos:
+            data["results"].append({
+                "task": todo.task,
+                "description": todo.description,
+                "completed": todo.completed,
+                "created_at": todo.created_at,
+                "updated_at": todo.updated_at
+            })
 
-@api_view(['GET', 'POST'])
-def hi(request: Request) -> Response:
-    '''hi view'''
-    if request.method == 'GET':
-        params = request.query_params
-        name = params.get('name', '')
-    
-    elif request.method == 'POST':
-        params = request.data
-        name = params.get('name', '')
-
-    return Response({'name': name}, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def addition(request: Request) -> Response:
-    '''add two number'''
-    if request.method == 'GET':
-        params = request.query_params
-        a = params.get('a', 0)
-        b = params.get('b', 0)
-
-    elif request.method == 'POST':
-        params = request.data
-        a = params.get('a', 0)
-        b = params.get('b', 0)
-    
-    return Response({'result': int(a) + int(b)}, status=status.HTTP_200_OK)
-    
-
-@api_view(['GET'])
-def subtraction(request: Request) -> Response:
-    '''subtract two number'''
-    if request.method == 'GET':
-        params = request.query_params
-        a = params.get('a', 0)
-        b = params.get('b', 0)
-
-    elif request.method == 'POST':
-        params = request.data
-        a = params.get('a', 0)
-        b = params.get('b', 0)
-
-    return Response({'result': int(a) - int(b)}, status=status.HTTP_200_OK)
-    
-
-@api_view(['GET'])
-def multiplication(request: Request) -> Response:
-    '''multiply two number'''
-    if request.method == 'GET':
-        params = request.query_params
-        a = params.get('a', 0)
-        b = params.get('b', 0)
-    
-    elif request.method == 'POST':
-        params = request.data
-        a = params.get('a', 0)
-        b = params.get('b', 0)
-
-    return Response({'result': int(a) * int(b)}, status=status.HTTP_200_OK)
-    
-
-@api_view(['GET'])
-def division(request: Request) -> Response:
-    '''divide two number'''
-    if request.method == 'GET':
-        params = request.query_params
-        a = int(params.get('a', 0))
-        b = params.get('b', None)
-    
-    elif request.method == 'POST':
-        params = request.data
-        a = int(params.get('a', 0))
-        b = params.get('b', None)
-
-    if b is None:
-        return Response({'error': 'b is required'})
-    else:
-        b = int(b)
-    
-    if b == 0:
-        return Response({'error': 'division by zero'})
-    
-    return Response({'result': a / b}, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
