@@ -12,9 +12,10 @@ class TodoView(APIView):
         data = {
             "results": []
         }
-        serializer = TodoSerializer(todos[0])
+        
         
         for todo in todos:
+            serializer = TodoSerializer(todo)
             data["results"].append(serializer.data)
 
         return Response(data, status=status.HTTP_200_OK)
